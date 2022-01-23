@@ -1,0 +1,239 @@
+//
+//Author: Nikhil Ganapathy Manjapura
+//Embedded Systems Engineering - Fachhochschule Dortmund
+//Code: Implementation of Fuel and Obstacle detection system
+//
+
+
+#include <LiquidCrystal.h>
+// initialize the library by associating any needed LCD interface pin
+// with the arduino pin number it is connected to
+const int rs = 12, en = 11, d4 = 7, d5 = 6, d6 = 5, d7 = 4;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+//pin of ultrasonic sensor
+const int echoPin = 3;
+
+
+//potentiometer
+const int fule = A0;
+
+int led_red = 0; // the red LED is connected to Pin 0 of the Arduino
+int led_yellow = 1; // the yellow LED is connected to Pin 1 of the Arduino
+int led_green = 2; // the green LED is connected to Pin 2 of the Arduino
+
+void setup() {
+  // set up all the LEDs as OUTPUT
+  pinMode(led_red, OUTPUT);
+  pinMode(led_yellow, OUTPUT);
+  pinMode(led_green, OUTPUT);
+  
+   //utrasonic sensor
+  pinMode(echoPin, INPUT);
+  
+  lcd.begin(16,2);
+  //lcd.print("hello world");
+}
+
+void loop() {
+  
+  
+  float duration, cm;
+
+  // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
+  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
+  pinMode(echoPin, OUTPUT);
+  digitalWrite(echoPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(echoPin, HIGH);
+  delayMicroseconds(5);
+  digitalWrite(echoPin, LOW);
+
+  // The same pin is used to read the signal from the PING))): a HIGH
+  // pulse whose duration is the time (in microseconds) from the sending
+  // of the ping to the reception of its echo off of an object.
+  pinMode(echoPin, INPUT);
+  duration = pulseIn(echoPin, HIGH);
+
+  // convert the time into a distance
+  cm = microsecondsToCentimeters(duration);
+  
+  
+  // turn the green LED on and the other LEDs off
+  if((cm<120) && (cm>50))
+  {
+    digitalWrite(led_red, LOW);
+    delay(500);
+    digitalWrite(led_red, HIGH);
+    delay(500);
+    lcd.setCursor(0,0);
+    lcd.print("Alert!");
+  }else if(cm<=50)
+  {
+    digitalWrite(led_red, HIGH);
+    lcd.setCursor(0,0);
+    lcd.print("Alert!-Stop!");
+  }else
+  {
+    digitalWrite(led_red, LOW);
+    lcd.setCursor(0,0);
+    lcd.print("Drive Drive");
+  }
+  
+  int fuleLevel = analogRead(fule);
+  fuleLevel = map(fuleLevel, 0, 1023, 0, 1600);
+  if((fuleLevel < 1600) && (fuleLevel >=1500))
+  {
+    lcd.setCursor(0,1);
+    lcd.print("****************");
+  }else if((fuleLevel < 1500) && (fuleLevel >=1400))
+  {
+    for(int i=15; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("***************");
+  }else if((fuleLevel < 1400) && (fuleLevel >=1300))
+  {
+    for(int i=14; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("**************");
+  }else if((fuleLevel < 1300) && (fuleLevel >=1200))
+  {
+    for(int i=13; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("*************");
+  }else if((fuleLevel < 1200) && (fuleLevel >=1100))
+  {
+    for(int i=12; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("************");
+  }else if((fuleLevel < 1100) && (fuleLevel >=1000))
+  {
+    for(int i=11; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("***********");
+  }else if((fuleLevel < 1000) && (fuleLevel >=900))
+  {
+    for(int i=10; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("**********");
+  }else if((fuleLevel < 900) && (fuleLevel >=800))
+  {
+    for(int i=9; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("*********");
+  }else if((fuleLevel < 800) && (fuleLevel >=700))
+  {
+    for(int i=8; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("********");
+  }else if((fuleLevel < 700) && (fuleLevel >=600))
+  {
+    for(int i=7; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("*******");
+  }else if((fuleLevel < 600) && (fuleLevel >=500))
+  {
+    for(int i=6; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("******");
+  }else if((fuleLevel < 500) && (fuleLevel >=400))
+  {
+    for(int i=5; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("*****");
+  }
+  else if((fuleLevel < 400) && (fuleLevel >=300))
+  {
+    for(int i=4; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("****");
+  }
+  else if((fuleLevel < 300) && (fuleLevel >=200))
+  {
+    for(int i=3; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("***");
+  }else if((fuleLevel < 200) && (fuleLevel >=100))
+  {
+    for(int i=2; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("**");
+  }else
+  {
+    for(int i=9; i<16; i++)
+    {
+      lcd.setCursor(i,1);
+      lcd.print(" ");
+    }
+    lcd.setCursor(0,1);
+    lcd.print("TankEmpty");
+  }
+  //lcd.clear();
+  delay(200);
+}
+
+
+long microsecondsToInches(long microseconds) {
+   return microseconds / 74 / 2;
+}
+
+long microsecondsToCentimeters(long microseconds) {
+   return microseconds / 29 / 2;
+}
